@@ -54,7 +54,7 @@ def deloutliers(dictionary,data,contamination=0.02):
 
 data_dict.pop('TOTAL',0)
 data_dict.pop('THE TRAVEL AGENCY IN THE PARK')
-data_dict.pop('LOCKHART EUGENE E')
+data_dict.pop('LOCKHART EUGENE E') #this key does not contain any value to its feature
 
 
 data_dict = deloutliers(data_dict,featureFormat(data_dict, features_list,sort_keys = True))
@@ -84,6 +84,7 @@ labels, features = targetFeatureSplit(data)
 ### http://scikit-learn.org/stable/modules/pipeline.html
 
 # Provided to give you a starting point. Try a variety of classifiers.
+#feature selection using PCA
 '''
 data = featureFormat(my_dataset, features_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
@@ -115,7 +116,7 @@ print rfst_clf
 test_classifier(rfst_clf,my_dataset,features_list)
 print tree_clf
 test_classifier(tree_clf,my_dataset,features_list)'''
-
+#feature selection using SelectKBest
 '''eng_svm = Pipeline([('scaler',StandardScaler()),('kbest',SelectKBest()),('svm',SVC())])
 param_grid = ([{'kbest__k':[3,4,5,6],
                 'svm__C': [1,10,100,1000],
@@ -145,7 +146,7 @@ test_classifier(rfst_clf,my_dataset,features_list)
 print tree_clf
 test_classifier(tree_clf,my_dataset,features_list)
 '''
-
+#Hybrid feature selection using feature union that combines PCA and SelectKBest
 combined_features = FeatureUnion([("pca", PCA()), ("kbest", SelectKBest())])
 
 hybrid_svm = Pipeline([('features',combined_features),('scaler',StandardScaler()),('svm',SVC())])
@@ -186,5 +187,5 @@ features_train, features_test, labels_train, labels_test = train_test_split(feat
 ### that the version of poi_id.py that you submit can be run on its own and
 ### generates the necessary .pkl files for validating your results.
 
-#dump_classifier_and_data(clf, my_dataset, features_list)
+dump_classifier_and_data(clf, my_dataset, features_list)
 
